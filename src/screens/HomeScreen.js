@@ -8,7 +8,11 @@ import {
 	ScrollView
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import ItemsScreen from './ItemsScreen';
+import { useNavigation } from '@react-navigation/native';
+
 function HomeScreen() {
+	const navigation = useNavigation();
 	return (
 		<View style={styles.container}>
 			<View style={styles.banner}>
@@ -18,9 +22,9 @@ function HomeScreen() {
 				/>
 			</View>
 			<View style={styles.textContainer}>
-				<Text style={styles.bannerText}>Shoes</Text>
+				<Text style={styles.bannerText}>Sport</Text>
 				<Text style={[styles.bannerText, { color: '#ccc' }]}>.</Text>
-				<Text style={[styles.bannerText, { color: '#ccc' }]}>Male</Text>
+				<Text style={[styles.bannerText, { color: '#ccc' }]}>Wear</Text>
 				<TouchableOpacity
 					style={{ position: 'absolute', right: 0, alignItems: 'center' }}
 				>
@@ -30,10 +34,8 @@ function HomeScreen() {
 			<View style={styles.line}></View>
 			<ScrollView>
 				<Text style={styles.bannerText}>New Features</Text>
-
 				<View style={styles.products}>
-					<View style={styles.productsItems}></View>
-					<View style={styles.productsItems}></View>
+					<ItemsScreen onClick={() => navigation.navigate('DetailsScreen')} />
 				</View>
 			</ScrollView>
 		</View>
@@ -67,11 +69,6 @@ const styles = StyleSheet.create({
 	products: {
 		flexDirection: 'row',
 		justifyContent: 'space-around'
-	},
-	productsItems: {
-		width: 90,
-		height: 75,
-		backgroundColor: 'skyblue'
 	}
 });
 
