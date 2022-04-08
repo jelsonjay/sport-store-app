@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	View,
 	TouchableOpacity,
@@ -8,11 +8,18 @@ import {
 	ScrollView
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import ItemsScreen from './ItemsScreen';
-import { useNavigation } from '@react-navigation/native';
+import { listItems } from '../../data/data';
 
-function HomeScreen() {
-	const navigation = useNavigation();
+function HomeScreen({ navigation }) {
+	const [listItem, setListItem] = useState(listItems);
+
+	function lengthDesc(desc) {
+		if (desc.length < 19) {
+			return desc;
+		}
+		return `${desc.substring(0, 14)}...`;
+	}
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.banner}>
@@ -23,7 +30,6 @@ function HomeScreen() {
 			</View>
 			<View style={styles.textContainer}>
 				<Text style={styles.bannerText}>Sport</Text>
-				<Text style={[styles.bannerText, { color: '#ccc' }]}>.</Text>
 				<Text style={[styles.bannerText, { color: '#ccc' }]}>Wear</Text>
 				<TouchableOpacity
 					style={{ position: 'absolute', right: 0, alignItems: 'center' }}
@@ -33,9 +39,21 @@ function HomeScreen() {
 			</View>
 			<View style={styles.line}></View>
 			<ScrollView>
-				<Text style={styles.bannerText}>New Features</Text>
+				<Text style={styles.bannerText}>New Releases</Text>
 				<View style={styles.products}>
-					<ItemsScreen onClick={() => navigation.navigate('DetailsScreen')} />
+					{listItem.map(item => (
+						<TouchableOpacity
+							key={item.key}
+							style={styles.productsItems}
+							onPress={() => navigation.navigate('DetailsScreen', item)}
+						>
+							<View>
+								<Image source={item.img} style={styles.productImg} />
+								<Text style={styles.productText}>{lengthDesc(item.name)}</Text>
+								<Text style={styles.productPrice}>£{item.price}</Text>
+							</View>
+						</TouchableOpacity>
+					))}
 				</View>
 			</ScrollView>
 		</View>
@@ -49,13 +67,16 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff'
 	},
 	banner: {
-		marginTop: 8
+		marginTop: 0,
+		height: 285
 	},
-	img: {},
+	img: {
+		height: 285
+	},
 	textContainer: {
 		flexDirection: 'row',
-		marginVertical: '5%',
-		marginHorizontal: '5%'
+		marginVertical: '3%',
+		marginHorizontal: '1%'
 	},
 	bannerText: {
 		fontSize: 28,
@@ -68,7 +89,30 @@ const styles = StyleSheet.create({
 	},
 	products: {
 		flexDirection: 'row',
-		justifyContent: 'space-around'
+		justifyContent: 'space-around',
+		flexWrap: 'wrap'
+	},
+	productsItems: {
+		paddingVertical: '5%',
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	productImg: {
+		width: 175,
+		height: 175,
+		margin: 8
+	},
+	productText: {
+		fontSize: 20,
+		fontFamily: 'Roboto_500Medium',
+		textAlign: 'center'
+	},
+	productPrice: {
+		fontSize: 18,
+		opacity: 0.4,
+		textAlign: 'center'
 	}
 });
 
